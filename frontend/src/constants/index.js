@@ -7,7 +7,6 @@ export const THEMES = [
   "corporate",
   "synthwave",
   "retro",
-  "cyberpunk",
   "valentine",
   "halloween",
   "garden",
@@ -29,6 +28,5 @@ export const THEMES = [
   "coffee",
   "winter",
   "dim",
-  "nord",
   "sunset",
 ];

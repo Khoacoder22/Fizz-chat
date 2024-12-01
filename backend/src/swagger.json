@@ -1,0 +1,292 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Chat App API",
+    "version": "1.0.0",
+    "description": "API documentation for Chat Application",
+    "contact": {
+      "name": "Developer",
+      "url": "https://yourwebsite.com",
+      "email": "developer@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001/api",  
+      "description": "Local development server"
+    },
+    {
+      "url": "http://localhost:5001/api",  
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "summary": "User signup",
+        "description": "Register a new user",
+        "operationId": "signupUser",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "User email"
+                  },
+                  "fullName": {
+                    "type": "string",
+                    "description": "Full name of the user"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password for the new account"
+                  }
+                },
+                "required": ["email", "fullName", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "User login",
+        "description": "Authenticate a user and return a token",
+        "operationId": "loginUser",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "User email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password for the account"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful, token returned"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "User logout",
+        "description": "Logout the user by invalidating the token",
+        "operationId": "logoutUser",
+        "tags": ["Auth"],
+        "responses": {
+          "200": {
+            "description": "Logout successful"
+          }
+        }
+      }
+    },
+    "/auth/update-profile": {
+      "put": {
+        "summary": "Update user profile",
+        "description": "Update the user's profile information",
+        "operationId": "updateProfile",
+        "tags": ["Auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullName": {
+                    "type": "string",
+                    "description": "Full name of the user"
+                  },
+                  "profilePic": {
+                    "type": "string",
+                    "description": "URL of the user's profile picture"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/auth/check": {
+      "get": {
+        "summary": "Check user authentication",
+        "description": "Check if the user is authenticated",
+        "operationId": "checkAuth",
+        "tags": ["Auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User is authenticated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/messages/users": {
+      "get": {
+        "summary": "Get users for sidebar",
+        "description": "Get list of users for the sidebar",
+        "operationId": "getUsersForSidebar",
+        "tags": ["Messages"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/messages/{id}": {
+      "get": {
+        "summary": "Get messages for a user",
+        "description": "Retrieve all messages between the current user and another user",
+        "operationId": "getMessages",
+        "tags": ["Messages"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the user to fetch messages with",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of messages"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/messages/send/{id}": {
+      "post": {
+        "summary": "Send a message",
+        "description": "Send a message to another user",
+        "operationId": "sendMessage",
+        "tags": ["Messages"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the receiver user",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Text message"
+                  },
+                  "image": {
+                    "type": "string",
+                    "description": "Image URL (optional)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
